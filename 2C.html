@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Voting App</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      padding: 40px;
+      text-align: center;
+    }
+    #voting-app {
+      background: white;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    }
+    button {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      margin: 10px 5px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .results {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .result-item {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h2>React Voting App</h2>
+  <div id="voting-app"></div>
+
+  <script type="text/babel">
+    function VotingApp() {
+      const options = ['Option A', 'Option B', 'Option C'];
+      const [votes, setVotes] = React.useState({ 
+        'Option A': 0, 
+        'Option B': 0, 
+        'Option C': 0 
+      });
+
+      const handleVote = (option) => {
+        setVotes(prevVotes => ({
+          ...prevVotes,
+          [option]: prevVotes[option] + 1
+        }));
+      };
+
+      const totalVotes = Object.values(votes).reduce((a,b) => a + b, 0);
+
+      return (
+        <div>
+          <h3>Cast your vote:</h3>
+          {options.map(option => (
+            <button key={option} onClick={() => handleVote(option)}>
+              {option}
+            </button>
+          ))}
+
+          <div className="results">
+            <h3>Results:</h3>
+            {totalVotes === 0 && <p>No votes yet.</p>}
+            {options.map(option => {
+              const count = votes[option];
+              const percent = totalVotes ? ((count / totalVotes) * 100).toFixed(1) : 0;
+              return (
+                <div key={option} className="result-item">
+                  {option}: {count} vote{count !== 1 ? 's' : ''} ({percent}%)
+                </div>
+              );
+            })}
+            <p><strong>Total votes:</strong> {totalVotes}</p>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('voting-app'));
+    root.render(<VotingApp />);
+  </script>
+</body>
+</html>
